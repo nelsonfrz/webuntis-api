@@ -13,7 +13,7 @@ const char *password = "";
 #define TFT_CS 15
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
-const String url = "https://194b-2a02-8071-4583-2a0-8d0d-b5f2-31e6-2222.ngrok-free.app/";
+const String url = "ENTER URL";
 
 int day = 6;
 int month = 11;
