@@ -1,15 +1,24 @@
-import { WebUntis } from "webuntis";
+import { Lesson, WebUntis } from "webuntis";
 
-const untis = new WebUntis(
-  Bun.env.SCHOOL_NAME!,
-  Bun.env.USER_NAME!,
-  Bun.env.USER_PASSWORD!,
-  Bun.env.UNTIS_SERVER!
-);
-await untis.login();
+let untis: WebUntis;
+
+async function setupUntis() {
+  untis = new WebUntis(
+    Bun.env.SCHOOL_NAME!,
+    Bun.env.USER_NAME!,
+    Bun.env.USER_PASSWORD!,
+    Bun.env.UNTIS_SERVER!
+  );
+  await untis.login();
+}
 
 async function getTimetableString(day: number, month: number, year: number) {
-  let lessons = await untis.getOwnTimetableFor(new Date(year, month - 1, day));
+  let lessons: Lesson[] = [];
+  try {
+    lessons = await untis.getOwnTimetableFor(new Date(year, month - 1, day));
+  } catch {
+    setupUntis();
+  }
 
   if (!lessons) {
     return "Sorry, no data found.";
@@ -33,6 +42,8 @@ async function getTimetableString(day: number, month: number, year: number) {
 
   return timetable;
 }
+
+setupUntis();
 
 Bun.serve({
   port: 3000,
